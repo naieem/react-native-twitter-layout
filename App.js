@@ -1,160 +1,42 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  TextInput,
-  AppState,
-} from 'react-native';
-import HeaderComponent from './components/header.component';
-import FooterComponent from './components/footer.component';
-import data from './assets/data.json';
-const SECOND = 1;
-const MINUTE = 60;
-const HOUR = 3600;
-const DAY = 86400;
-const MONTH = 2629746;
-const YEAR = 31556952;
-const DECADE = 315569520;
-
-export default class App extends React.Component {
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      appState: AppState.currentState
-    }
-    this.timeAgo = this
-      .timeAgo
-      .bind(this);
-    this.videoListItem = this
-      .videoListItem
-      .bind(this);
-    this._handleAppStateChange = this._handleAppStateChange.bind(this);
+    };
   }
-  componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-  _handleAppStateChange = (nextAppState) => {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
-    }else{
-      console.log('App has gone to the background!')
-    }
-    this.setState({ appState: nextAppState });
-  }
-  videoListItem = (video) => {
-    return (
-      <TouchableOpacity style={{
-        padding: 20
-      }}>
-        <View>
-          <Image
-            source={{
-              uri: video.snippet.thumbnails.medium.url
-            }}
-            style={{
-              height: 200
-            }}></Image>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 26
-            }}>
-            {video.snippet.title}
-          </Text>
-          <Text>{this.timeAgo(new Date(video.snippet.publishedAt))}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-  timeAgo = (date) => {
-    var now = new Date();
-    var diff = Math.round((now - date) / 1000);
 
-    var unit = '';
-    var num = 0;
-    var plural = false;
-
-    switch (true) {
-      case diff <= 0:
-        return 'just now';
-        break;
-
-      case diff < MINUTE:
-        num = Math.round(diff / SECOND);
-        unit = 'sec';
-        plural = num > 1;
-        break;
-
-      case diff < HOUR:
-        num = Math.round(diff / MINUTE);
-        unit = 'min';
-        plural = num > 1;
-        break;
-
-      case diff < DAY:
-        num = Math.round(diff / HOUR);
-        unit = 'hour';
-        plural = num > 1;
-        break;
-
-      case diff < MONTH:
-        num = Math.round(diff / DAY);
-        unit = 'day';
-        plural = num > 1;
-        break;
-
-      case diff < YEAR:
-        num = Math.round(diff / MONTH);
-        unit = 'month';
-        plural = num > 1;
-        break;
-
-      case diff < DECADE:
-        num = Math.round(diff / YEAR);
-        unit = 'year';
-        plural = num > 1;
-        break;
-
-      default:
-        num = Math.round(diff / YEAR);
-        unit = 'year';
-        plural = num > 1;
-    }
-
-    var str = '';
-    if (num) {
-      str += `${num} `;
-    }
-
-    str += `${unit}`;
-
-    if (plural) {
-      str += 's';
-    }
-
-    str += ' ago';
-
-    return str;
-  }
   render() {
     return (
-      <View style={styles.container}>
-        {/* header Navbar */}
-        <HeaderComponent></HeaderComponent>
-        {/* main Container */}
-        <View style={styles.mainContainer}>
-          <FlatList
-            data={data.items}
-            renderItem={({ item, separators }) => this.videoListItem(item)}
-            keyExtractor={(item, index) => item.snippet.title} />
+
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.logoContainer}>
+          <Image source={require('./assets/logo.png')} style={{ height: 200, }}></Image>
         </View>
-        {/* Footer Navbar */}
-       <FooterComponent></FooterComponent>
-      </View>
+        <ScrollView style={styles.loginFormContainer}>
+
+          <View style={{ marginBottom: 20, alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 26 }}>Login</Text>
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+            />
+            <TouchableOpacity>
+              <Button title='Login' raised buttonStyle={styles.submitStyle} />
+            </TouchableOpacity>
+          </View>
+
+        </ScrollView>
+      </KeyboardAvoidingView>
+
     );
   }
 }
@@ -162,9 +44,28 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
   },
-  mainContainer: {
-    flex: 1
+  logoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginFormContainer: {
+    flex: 1,
+    paddingHorizontal: 30,
+  },
+  input: {
+    borderRadius: 10,
+    borderColor: '#0AF5C3',
+    borderWidth: 1,
+    height: 40,
+    marginBottom: 20,
+    paddingHorizontal: 10
+  },
+  submitStyle: {
+    backgroundColor: '#0AF5C3',
+    borderRadius: 10,
+    borderColor: 'transparent',
+    borderWidth: 0
   }
 });
