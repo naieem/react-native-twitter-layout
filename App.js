@@ -6,9 +6,11 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  TextInput
+  TextInput,
+  AppState,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
+import HeaderComponent from './components/header.component';
+import FooterComponent from './components/footer.component';
 import data from './assets/data.json';
 const SECOND = 1;
 const MINUTE = 60;
@@ -22,7 +24,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showSearchBox: false
+      appState: AppState.currentState
     }
     this.timeAgo = this
       .timeAgo
@@ -30,6 +32,18 @@ export default class App extends React.Component {
     this.videoListItem = this
       .videoListItem
       .bind(this);
+    this._handleAppStateChange = this._handleAppStateChange.bind(this);
+  }
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+    }else{
+      console.log('App has gone to the background!')
+    }
+    this.setState({ appState: nextAppState });
   }
   videoListItem = (video) => {
     return (
@@ -39,16 +53,16 @@ export default class App extends React.Component {
         <View>
           <Image
             source={{
-            uri: video.snippet.thumbnails.medium.url
-          }}
+              uri: video.snippet.thumbnails.medium.url
+            }}
             style={{
-            height: 200
-          }}></Image>
+              height: 200
+            }}></Image>
           <Text
             style={{
-            fontWeight: 'bold',
-            fontSize: 26
-          }}>
+              fontWeight: 'bold',
+              fontSize: 26
+            }}>
             {video.snippet.title}
           </Text>
           <Text>{this.timeAgo(new Date(video.snippet.publishedAt))}</Text>
@@ -130,58 +144,16 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         {/* header Navbar */}
-        <View style={styles.header}>
-          {!this.state.showSearchBox && <Image
-            source={require('./assets/instagram.png')}
-            style={{
-            height: 30,
-            width: 100
-          }}></Image>
-}
-          {this.state.showSearchBox && <View
-            style={{
-            flex: 1,
-            paddingHorizontal: 10
-          }}>
-            <TextInput
-              style={{
-              height: 30,
-              borderWidth: 1,
-              borderColor: '#e5e5e5',
-              paddingHorizontal: 10
-            }}
-              placeholder="Type here to translate!"
-              onChangeText={(text) => console.log('hello world')}/>
-          </View>
-}
-
-          <View style={styles.headerRight}>
-            <View style={{
-              marginRight: 20
-            }}>
-              <TouchableOpacity
-                onPress={() => this.setState({
-                showSearchBox: !this.state.showSearchBox
-              })}>
-                <Icon name='ios-search' type='ionicon' color='#517fa4'/>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity>
-                <Icon name='ios-more' type='ionicon' color='#517fa4'/>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <HeaderComponent></HeaderComponent>
         {/* main Container */}
         <View style={styles.mainContainer}>
           <FlatList
             data={data.items}
-            renderItem={({item, separators}) => this.videoListItem(item)}
-            keyExtractor={(item, index) => item.snippet.title}/>
+            renderItem={({ item, separators }) => this.videoListItem(item)}
+            keyExtractor={(item, index) => item.snippet.title} />
         </View>
         {/* Footer Navbar */}
-        <View style={styles.footerNavbar}></View>
+       <FooterComponent></FooterComponent>
       </View>
     );
   }
@@ -192,27 +164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff'
   },
-  header: {
-    justifyContent: 'space-between',
-    backgroundColor: '#ececec',
-    flexDirection: 'row',
-    paddingTop: 30,
-    paddingBottom: 10,
-    paddingHorizontal: 20
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  headerIcon: {
-    paddingLeft: 25
-  },
   mainContainer: {
     flex: 1
-  },
-  footerNavbar: {
-    height: 50,
-    backgroundColor: 'red',
-    paddingHorizontal: 10
   }
 });
