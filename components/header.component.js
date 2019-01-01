@@ -34,7 +34,7 @@ class HeaderComponent extends Component {
                                 borderRadius: 10
                             }}
                             clearButtonMode="while-editing"
-                            placeholder="Type here to translate!"
+                            placeholder="Type here search"
                             onChangeText={(text) => console.log('hello world')} />
                     </View>
                     }
