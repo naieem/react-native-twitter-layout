@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text,Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import LogoComponent from './logo.component';
 import { Icon } from 'react-native-elements';
 class HeaderComponent extends Component {
     constructor(props) {
@@ -13,30 +14,31 @@ class HeaderComponent extends Component {
         return (
             <View>
                 <View style={styles.header}>
-                    {!this.state.showSearchBox && <Image
+                    {/* {!this.state.showSearchBox && <Image
                         source={require('../assets/instagram.png')}
                         style={{
                             height: 30,
                             width: 100
                         }}></Image>
-                    }
-                    {this.state.showSearchBox && <View
-                        style={{
+                    } */}
+                    <LogoComponent IsShowSearchBox={this.state.showSearchBox}></LogoComponent>
+                    {this.state.showSearchBox &&
+                        <View style={{
                             flex: 1,
                             paddingHorizontal: 10
                         }}>
-                        <TextInput
-                            style={{
-                                height: 30,
-                                borderWidth: 1,
-                                borderColor: '#380AF5',
-                                paddingHorizontal: 10,
-                                borderRadius: 10
-                            }}
-                            clearButtonMode="while-editing"
-                            placeholder="Type here search"
-                            onChangeText={(text) => console.log('hello world')} />
-                    </View>
+                            <TextInput
+                                style={{
+                                    height: 30,
+                                    borderWidth: 1,
+                                    borderColor: '#380AF5',
+                                    paddingHorizontal: 10,
+                                    borderRadius: 10
+                                }}
+                                clearButtonMode="while-editing"
+                                placeholder="Type here search"
+                                onChangeText={(text) => console.log('hello world')} />
+                        </View>
                     }
 
                     <View style={styles.headerRight}>
