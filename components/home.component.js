@@ -6,8 +6,6 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  TextInput,
-  AppState,
 } from 'react-native';
 import HeaderComponent from './header.component';
 import FooterComponent from './footer.component';
@@ -31,14 +29,18 @@ export default class HomeComponent extends React.Component {
     this.videoListItem = this
       .videoListItem
       .bind(this);
+    this.gotoVideoDetais = this.gotoVideoDetais.bind(this);
   }
   componentDidMount() {
+  }
+  gotoVideoDetais = () => {
+    this.props.navigation.navigate('YouTubeDetails')
   }
   videoListItem = (video) => {
     return (
       <TouchableOpacity style={{
         padding: 20
-      }}>
+      }} onPress={this.gotoVideoDetais}>
         <View>
           <Image
             source={{
@@ -142,7 +144,7 @@ export default class HomeComponent extends React.Component {
             keyExtractor={(item, index) => item.snippet.title} />
         </View>
         {/* Footer Navbar */}
-       <FooterComponent></FooterComponent>
+        <FooterComponent></FooterComponent>
       </View>
     );
   }
