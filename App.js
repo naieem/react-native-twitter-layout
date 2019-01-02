@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, Text,Button, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native';
+// import { Button } from 'react-native-elements';
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -29,8 +29,8 @@ export default class App extends Component {
               style={styles.input}
               placeholder="Password"
             />
-            <TouchableOpacity>
-              <Button title='Login' raised buttonStyle={styles.submitStyle} />
+            <TouchableOpacity style={{justifyContent:'center',alignItems:'center'}}>
+              <Text style={styles.submitStyle}>Login</Text>
             </TouchableOpacity>
           </View>
 
@@ -63,9 +63,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   submitStyle: {
+    width:200,
+    textAlign:'center',
+    paddingVertical: 10,
     backgroundColor: '#0AF5C3',
-    borderRadius: 10,
-    borderColor: 'transparent',
-    borderWidth: 0
+    borderRadius:10,
+    color:'#fff',
+    fontWeight:'bold'
   }
 });
