@@ -9,9 +9,9 @@ import {
   TextInput,
   AppState,
 } from 'react-native';
-import HeaderComponent from './components/header.component';
-import FooterComponent from './components/footer.component';
-import data from './assets/data.json';
+import HeaderComponent from './header.component';
+import FooterComponent from './footer.component';
+import data from '../assets/data.json';
 const SECOND = 1;
 const MINUTE = 60;
 const HOUR = 3600;
@@ -24,7 +24,6 @@ export default class HomeComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      appState: AppState.currentState
     }
     this.timeAgo = this
       .timeAgo
@@ -32,18 +31,8 @@ export default class HomeComponent extends React.Component {
     this.videoListItem = this
       .videoListItem
       .bind(this);
-    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
   componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-  _handleAppStateChange = (nextAppState) => {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
-    }else{
-      console.log('App has gone to the background!')
-    }
-    this.setState({ appState: nextAppState });
   }
   videoListItem = (video) => {
     return (
