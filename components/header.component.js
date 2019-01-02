@@ -2,26 +2,33 @@ import React, { Component } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import LogoComponent from './logo.component';
 import { Icon } from 'react-native-elements';
+import sharedService from '../services/shared.services';
+import Observable from '../services/observable.services';
 class HeaderComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showSearchBox: false
+            showSearchBox: false,
+            title:'Home'
         };
+        Observable.registerObserver('OnmoreCLick',(value)=>{
+            // console.log(value);
+            this.setState({
+                title:value.title
+            });
+        });
+        this.moreButtonClick = this.moreButtonClick.bind(this);
     }
-
+    moreButtonClick=()=>{
+        Observable.emit('OnmoreCLick',{title:'hukka'});
+    }
     render() {
         return (
             <View>
                 <View style={styles.header}>
-                    {/* {!this.state.showSearchBox && <Image
-                        source={require('../assets/instagram.png')}
-                        style={{
-                            height: 30,
-                            width: 100
-                        }}></Image>
-                    } */}
+                    {/* logo container */}
                     <LogoComponent IsShowSearchBox={this.state.showSearchBox}></LogoComponent>
+                    {/* search box container */}
                     {this.state.showSearchBox &&
                         <View style={{
                             flex: 1,
@@ -40,7 +47,10 @@ class HeaderComponent extends Component {
                                 onChangeText={(text) => console.log('hello world')} />
                         </View>
                     }
-
+                    <View style={{justifyContent: 'center',}}>
+                        <Text>{this.state.title}</Text>
+                    </View>
+                    {/* right side buttons container */}
                     <View style={styles.headerRight}>
                         <View style={{
                             marginRight: 20
@@ -63,7 +73,7 @@ class HeaderComponent extends Component {
                             }
                         </View>
                         <View>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={this.moreButtonClick}>
                                 <Icon name='ios-more' type='ionicon' color='#517fa4' />
                             </TouchableOpacity>
                         </View>

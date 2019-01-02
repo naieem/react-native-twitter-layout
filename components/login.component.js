@@ -10,6 +10,7 @@ import {
   ScrollView
 } from 'react-native';
 import {Auth, Firebase} from '../db/db.config';
+import sharedService from '../services/shared.services';
 export default class LoginComponent extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +35,11 @@ export default class LoginComponent extends Component {
       .then((result) => {
         console.log('Login successfully');
         this.props.loginButtonClicked(true);
+        sharedService.setLoggedInUserStatus(true);
       })
       .catch(function (error) {
         // Handle Errors here.
+        sharedService.setLoggedInUserStatus(false);
         var errorCode = error.code;
         var errorMessage = error.message;
         if (errorCode === 'auth/wrong-password') {
