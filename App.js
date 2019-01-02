@@ -33,6 +33,7 @@ export default class App extends Component {
       }
     });
   }
+  // signout if app has gone to background from frontend
   _handleAppStateChange = (nextAppState) => {
     if (nextAppState === 'active') {
       console.log('App has come to the foreground!');
@@ -55,16 +56,30 @@ export default class App extends Component {
     console.log('event recieved ' + state);
     this.setState({userLoggedIn: state});
   }
+  // return screen after a decision is made that user is loggedin or not
+  firstTimeScreen = ()=>{
+    return (
+      <View style={styles.container}>
+        {/* if user not logged in */}
+        {!this.state.userLoggedIn && 
+        <LoginComponent loginButtonClicked={this.handleLoginClick}></LoginComponent>
+        }
+        {/* if user not logged in */}
+        {
+          this.state.userLoggedIn && 
+          <HomeComponent></HomeComponent>
+        }
+      </View>
+    );
+  }
   render() {
     return (
       <View style={styles.container}>
-        {this.state.userLoggedIn != 'pending' && <View style={styles.container}>
-          {!this.state.userLoggedIn && <LoginComponent loginButtonClicked={this.handleLoginClick}></LoginComponent>
-}
-          {this.state.userLoggedIn && <HomeComponent></HomeComponent>
-}
-        </View>
-}
+        {/* after setting any status to userloggedin property */}
+        {this.state.userLoggedIn != 'pending' && 
+        this.firstTimeScreen()
+        }
+        {/* before setting any status to userloggedin property */}
         {this.state.userLoggedIn == 'pending' && <View
           style={{
           flex: 1,
@@ -75,7 +90,7 @@ export default class App extends Component {
             <ActivityIndicator size="large" color="#00ff00"/>
           </View>
         </View>
-}
+       }
       </View>
     );
   }
