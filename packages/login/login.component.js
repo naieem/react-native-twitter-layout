@@ -10,8 +10,8 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { Auth, Firebase } from '../db/db.config';
-import sharedService from '../services/shared.services';
+import { Auth, Firebase } from '../../db/db.config';
+import sharedService from '../../services/shared.services';
 export default class LoginComponent extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +45,7 @@ export default class LoginComponent extends Component {
           loading: false
         });
       })
-      .catch((error)=> {
+      .catch((error) => {
         // Handle Errors here.
         sharedService.setLoggedInUserStatus(false);
         var errorCode = error.code;
@@ -61,13 +61,42 @@ export default class LoginComponent extends Component {
         console.log(error);
       });
   }
+  input = () => {
+    return {
+      borderRadius:this.props.config && this.props.config.InputBorderRadius && this.props.config.InputBorderRadius || 0,
+      borderColor: this.props.config && this.props.config.InputBorderColor && this.props.config.InputBorderColor || '#0AF5C3',
+      borderWidth: 1,
+      height: this.props.config && this.props.config.InputHeight && this.props.config.InputHeight || 40,
+      marginBottom: 20,
+      paddingHorizontal: 10,
+    }
+  }
+  loadingButton = () => {
+    return {
+      backgroundColor: this.props.config && this.props.config.LoaderConfig && this.props.config.LoaderConfig.LoaderBackgroundColor || '#0A11F5',
+      width: 200,
+      paddingVertical: 10
+    }
+  }
+  loginButtonStyle = () => {
+    return {
+      width: 200,
+      textAlign: 'center',
+      paddingVertical: this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.PaddingVertical || 10,
+      backgroundColor: this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.BackgroundColor || '#0AEEF5',
+      borderRadius: this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.BorderRadius ||  10,
+      color: this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.TextColor || '#fff',
+      fontWeight: 'bold',
+      marginTop: this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.MarginTop || 0,
+    }
+  }
   render() {
     return (
 
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../assets/logo.png')}
+            source={this.props.config.Logo}
             style={{
               height: 200
             }}></Image>
@@ -83,20 +112,20 @@ export default class LoginComponent extends Component {
               style={{
                 fontWeight: 'bold',
                 fontSize: 26
-              }}>Login</Text>
+              }}>{this.props.config && this.props.config.LoginText || 'Login'}</Text>
           </View>
           <View>
             <TextInput
-              style={styles.input}
-              placeholder="Username"
+              style={this.input()}
+              placeholder={this.props.config && this.props.config.EmailConfig && this.props.config.EmailConfig.EmailPlaceHolder || 'Email'}
               value={this.state.email}
               onChangeText={(text) => {
                 this.setState({ email: text });
                 console.log(this.state.email);
               }} />
             <TextInput
-              style={styles.input}
-              placeholder="Password"
+              style={this.input()}
+              placeholder={this.props.config && this.props.config.PasswordConfig && this.props.config.PasswordConfig.PasswordPlaceHolder || 'Password'}
               value={this.state.password}
               secureTextEntry={true}
               onChangeText={(text) => {
@@ -106,11 +135,12 @@ export default class LoginComponent extends Component {
             {/* loading screen on login button click */}
             {this.state.loading &&
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', }}>
-                <View style={{ backgroundColor: '#0AF5EA', width: 200, paddingVertical: 10 }}>
-                  <ActivityIndicator size="large" color="#0A11F5" />
+                <View style={this.loadingButton()}>
+                  <ActivityIndicator size="large" color={this.props.config && this.props.config.LoaderConfig && this.props.config.LoaderConfig.LoaderColor || '#0A11F5'}  />
                 </View>
               </View>
             }
+            {/* login button click if loader is not showing */}
             {!this.state.loading &&
               <TouchableOpacity
                 style={{
@@ -118,7 +148,7 @@ export default class LoginComponent extends Component {
                   alignItems: 'center'
                 }}
                 onPress={this.loginUser}>
-                <Text style={styles.submitStyle}>Login</Text>
+                <Text style={this.loginButtonStyle()}>{this.props.config && this.props.config.LoginButtonConfig && this.props.config.LoginButtonConfig.Text || 'Login'}</Text>
               </TouchableOpacity>
             }
           </View>
@@ -143,21 +173,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 30
   },
-  input: {
-    borderRadius: 10,
-    borderColor: '#0AF5C3',
-    borderWidth: 1,
-    height: 40,
-    marginBottom: 20,
-    paddingHorizontal: 10
-  },
-  submitStyle: {
-    width: 200,
-    textAlign: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#0AF5C3',
-    borderRadius: 10,
-    color: '#fff',
-    fontWeight: 'bold'
-  }
+  // input: {
+  //   borderRadius: 10,
+  //   borderColor: '#0AF5C3',
+  //   borderWidth: 1,
+  //   height: 40,
+  //   marginBottom: 20,
+  //   paddingHorizontal: 10
+  // },
+  // submitStyle: {
+  //   width: 200,
+  //   textAlign: 'center',
+  //   paddingVertical: 10,
+  //   backgroundColor: 'red',
+  //   borderRadius: 10,
+  //   color: '#fff',
+  //   fontWeight: 'bold'
+  // }
 });

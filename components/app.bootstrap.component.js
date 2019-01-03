@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react';
 import { View, StyleSheet, AppState, ActivityIndicator } from 'react-native';
-import LoginComponent from './login.component';
+import LoginComponent from '../packages/login/login.component'
 import AppNavigator from '../navigation/navigation';
 import { Auth } from '../db/db.config';
 console.disableYellowBox = true;
@@ -20,6 +20,36 @@ export default class AppBootstrapper extends Component {
         this.handleLoginClick = this
             .handleLoginClick
             .bind(this);
+        // login apps configuration settings
+        this.loginAppConfig = {
+            Logo: require('../assets/logo.png'),
+            LoginText: 'Login',
+            InputBorderColor: '#0AF5C3',
+            InputBorderRadius: 10,
+            InputHeight: 50,
+            EmailConfig: {
+                EmailPlaceHolder: 'Email',
+                EmailBorderColor: '',
+                EmailBorderRadius: '',
+            },
+            PasswordConfig: {
+                PasswordPlaceHolder: 'Password',
+                PasswordBorderColor: '',
+                PasswordBorderRadius: ''
+            },
+            LoginButtonConfig: {
+                Text: 'Login',
+                BackgroundColor: '#0AF5C3',
+                TextColor: '#fff',
+                MarginTop: 0,
+                BorderRadius: 10,
+                PaddingVertical: 15
+            },
+            LoaderConfig: {
+                LoaderColor: '#0A11F5',
+                LoaderBackgroundColor: '#0AF5EA',
+            }
+        }
     }
     componentDidMount() {
         console.log('app.js component did mount called');
@@ -66,7 +96,7 @@ export default class AppBootstrapper extends Component {
             <View style={styles.container}>
                 {/* if user not logged in */}
                 {!this.state.userLoggedIn &&
-                    <LoginComponent loginButtonClicked={this.handleLoginClick}></LoginComponent>
+                    <LoginComponent config={this.loginAppConfig} loginButtonClicked={this.handleLoginClick}></LoginComponent>
                 }
                 {/* if user logged in */}
                 {
