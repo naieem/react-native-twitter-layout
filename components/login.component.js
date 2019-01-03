@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,17 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native';
-import {Auth, Firebase} from '../db/db.config';
+import { Auth, Firebase } from '../db/db.config';
 import sharedService from '../services/shared.services';
 export default class LoginComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userLoggedIn: false,
+      loading: false,
       email: '',
       password: '',
       userInfo: {}
@@ -30,18 +32,27 @@ export default class LoginComponent extends Component {
 
   loginUser = () => {
     console.log('login called');
+    this.setState({
+      loading: true
+    });
     Auth
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((result) => {
         console.log('Login successfully');
         this.props.loginButtonClicked(true);
         sharedService.setLoggedInUserStatus(true);
+        this.setState({
+          loading: false
+        });
       })
-      .catch(function (error) {
+      .catch((error)=> {
         // Handle Errors here.
         sharedService.setLoggedInUserStatus(false);
         var errorCode = error.code;
         var errorMessage = error.message;
+        this.setState({
+          loading: false
+        });
         if (errorCode === 'auth/wrong-password') {
           alert('Wrong password.');
         } else {
@@ -58,21 +69,21 @@ export default class LoginComponent extends Component {
           <Image
             source={require('../assets/logo.png')}
             style={{
-            height: 200
-          }}></Image>
+              height: 200
+            }}></Image>
         </View>
         <ScrollView style={styles.loginFormContainer}>
 
           <View
             style={{
-            marginBottom: 20,
-            alignItems: 'center'
-          }}>
+              marginBottom: 20,
+              alignItems: 'center'
+            }}>
             <Text
               style={{
-              fontWeight: 'bold',
-              fontSize: 26
-            }}>Login</Text>
+                fontWeight: 'bold',
+                fontSize: 26
+              }}>Login</Text>
           </View>
           <View>
             <TextInput
@@ -80,26 +91,36 @@ export default class LoginComponent extends Component {
               placeholder="Username"
               value={this.state.email}
               onChangeText={(text) => {
-              this.setState({email: text});
-              console.log(this.state.email);
-            }}/>
+                this.setState({ email: text });
+                console.log(this.state.email);
+              }} />
             <TextInput
               style={styles.input}
               placeholder="Password"
               value={this.state.password}
               secureTextEntry={true}
               onChangeText={(text) => {
-              this.setState({password: text});
-              console.log(this.state.password);
-            }}/>
-            <TouchableOpacity
-              style={{
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-              onPress={this.loginUser}>
-              <Text style={styles.submitStyle}>Login</Text>
-            </TouchableOpacity>
+                this.setState({ password: text });
+                console.log(this.state.password);
+              }} />
+            {/* loading screen on login button click */}
+            {this.state.loading &&
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', }}>
+                <View style={{ backgroundColor: '#0AF5EA', width: 200, paddingVertical: 10 }}>
+                  <ActivityIndicator size="large" color="#0A11F5" />
+                </View>
+              </View>
+            }
+            {!this.state.loading &&
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                onPress={this.loginUser}>
+                <Text style={styles.submitStyle}>Login</Text>
+              </TouchableOpacity>
+            }
           </View>
 
         </ScrollView>
