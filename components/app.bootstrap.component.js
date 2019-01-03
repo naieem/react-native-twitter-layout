@@ -1,3 +1,7 @@
+/**
+ * main file which take care of all the login and after login related view change
+ * and other headache.This can be injected without being taking any kind of tension
+ */
 import React, { Component } from 'react';
 import { View, StyleSheet, AppState, ActivityIndicator } from 'react-native';
 import LoginComponent from './login.component';
